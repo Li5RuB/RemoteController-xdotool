@@ -74,7 +74,8 @@ LOCAL_IP = get_local_ip()
 
 @app.get("/")
 async def root():
-    with open("static/index.html", "r") as f:
+    html_file = BASE_DIR / "static" / "index.html"
+    with open(html_file, "r") as f:
         html = f.read().replace("{{WS_IP}}", LOCAL_IP)
     return HTMLResponse(html)
 
