@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Touchpad</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard/build/css/index.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/simple-keyboard/build/index.js"></script>
+</head>
+
+<body>
+  <div id="board">
+    <div id="pad"></div>
+    <div id="scrol"></div>
+  </div>
+  <div id="buttons">
+    <button onclick="sendClick('1')">ЛКМ</button>
+    <button onclick="sendClick('3')">ПКМ</button>
+  </div>
+  <div class="simple-keyboard" style="min-height: 30%; background: #393939;"></div>
+
+  <script>
+    const WS_IP = "{{WS_IP}}";
+    window.WS_URL = `ws://${WS_IP}:8000/ws`;
+  </script>
+  <script src="/static/touchpad.js"></script>
+
+  <script src="/static/keyboard.js"></script>
+</body>
+
+</html>
