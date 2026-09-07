@@ -57,8 +57,16 @@ def press_key(key):
     subprocess.run(["xdotool", "key", key])
 
 
+accumulator = 0.0
+
 def scroll(dy):
-    mouse.scroll(0, dy)
+    global accumulator
+    accumulator += dy
+    
+    steps = int(accumulator)
+    if steps != 0:
+        mouse.scroll(0, steps)
+        accumulator -= steps
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -70,6 +78,8 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 LOCAL_IP = get_local_ip()
+
+print(LOCAL_IP);
 
 
 @app.get("/")

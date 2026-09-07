@@ -29,13 +29,13 @@ let lastScrolly = null;
 
 let moveSensivity = 3;
 
-
-
+const SCROLL_SENSITIVITY = 4; 
 
 scrol.addEventListener("touchmove", e => {
   const t = e.touches[0];
   if (lastScrolly != null) {
-    const dy = t.clientY - lastScrolly;
+    let dy = (t.clientY - lastScrolly) / SCROLL_SENSITIVITY;
+
     throtteledScrollSend(dy)
     console.log("scroll:", dy);
   }

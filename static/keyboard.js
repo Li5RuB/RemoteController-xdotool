@@ -2,6 +2,15 @@ const Keyboard = window.SimpleKeyboard.default;
 let shiftPressed = false;
 let langPressed = false;
 
+const layoutTypes = {
+    keyboard: "keyboard",
+    navigation: "navigation"
+}
+
+const layoutsList = [layoutTypes.keyboard, layoutTypes.navigation];
+
+let layoutType = layoutTypes.keyboard;
+
 const keyboard = new Keyboard({
     onChange: input => { },
     onKeyPress: button => {
@@ -22,45 +31,94 @@ const keyboard = new Keyboard({
         ],
         russian: [
             "й ц у к е н г ш щ з х ъ",
-            "ф ы в а п р о л д ж",
+            "ф ы в а п р о л д ж э",
             "я ч с м и т ь б ю",
             "{lang} {shift} {space} {bksp} {enter}"],
         russian_shift: [
             "Й Ц У К Е Н Г Ш Щ З Х Ъ",
             "Ф Ы В А П Р О Л Д Ж Э",
             "Я Ч С М И Т Ь Б Ю",
-            "{lang} {shift} {space} {bksp} {enter}"]
+            "{lang} {shift} {space} {bksp} {enter}"],
+        navigation: [
+            "{up}",
+            "{left} {space} {right}",
+            "{down}"
+        ]
     },
     display: {
         "{enter}": "⏎",
         "{bksp}": "⌫",
         "{shift}": "⇧",
         "{space}": "␣",
-        "{lang}": "🌐"
+        "{lang}": "🌐",
+        "{up}": "▲",
+        "{down}": "▼",
+        "{left}": "◀",
+        "{right}": "▶"
     }
 });
 
 function handleKeyboardInput(button) {
-    let payload = null;
-
     let sendKey = button;
     let sendType = "text";
 
-    console.log(JSON.stringify({ type: sendType, key: sendKey }))
+    // Базовый лог (до изменений)
+    console.log(JSON.stringify({ type: sendType, key: sendKey }));
 
-    if (button === "{bksp}") { sendKey = "BackSpace"; sendType = "key"; }
-    if (button === "{space}") { sendKey = "space"; sendType = "key"; }
-    if (button === "{shift}") {
-        handleShiftToggle();
-        return;
-    };
-    if (button === "{enter}") { sendKey = "Return"; sendType = "key"; }
-    if (button === "{lang}") {
-        handleLangSwich()
-        return;
-    };
+    switch (button) {
+        // Системные клавиши (переключение интерфейса)
+        case "{shift}":
+            handleShiftToggle();
+            return; // Мгновенный выход, отправки в сокет не будет
 
-    console.log(JSON.stringify({ type: sendType, key: sendKey }))
+        case "{lang}":
+            handleLangSwich();
+            return; // Мгновенный выход, отправки в сокет не будет
+
+        // Клавиши управления текстом
+        case "{bksp}":
+            sendKey = "BackSpace";
+            sendType = "key";
+            break;
+
+        case "{space}":
+            sendKey = "space";
+            sendType = "key";
+            break;
+
+        case "{enter}":
+            sendKey = "Return";
+            sendType = "key";
+            break;
+
+        // Стрелочки навигации
+        case "{up}":
+            sendKey = "Up";
+            sendType = "key";
+            break;
+
+        case "{down}":
+            sendKey = "Down";
+            sendType = "key";
+            break;
+
+        case "{left}":
+            sendKey = "Left";
+            sendType = "key";
+            break;
+
+        case "{right}":
+            sendKey = "Right";
+            sendType = "key";
+            break;
+
+        // Все остальные кнопки (буквы) по умолчанию остаются text
+        default:
+            break;
+    }
+
+    // Финальный лог и отправка (сработает для всех, кроме shift и lang)
+    console.log(JSON.stringify({ type: sendType, key: sendKey }));
     ws.send(JSON.stringify({ type: sendType, key: sendKey }));
 }
 
@@ -74,8 +132,24 @@ function handleLangSwich() {
     setLayout();
 }
 
+function swapLayoutType(){
+    let currentLayoutIndex = layoutsList.indexOf(layoutType)
+
+    currentLayoutIndex = (currentLayoutIndex + 1) % layoutsList.length;
+
+    layoutType = layoutsList[currentLayoutIndex];
+    setLayout();
+}
+
 function setLayout() {
+    if (layoutType == layoutTypes.keyboard) {
+        keyboard.setOptions({
+            layoutName: (langPressed ? "russian" : "default") + (shiftPressed ? "_shift" : "")
+        })
+        return;
+    }
+
     keyboard.setOptions({
-        layoutName: (langPressed ? "russian" : "default") + (shiftPressed ? "_shift" : "")
-    });
+        layoutName: (layoutType)
+    })
 };
