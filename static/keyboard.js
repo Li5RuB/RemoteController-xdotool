@@ -2,12 +2,15 @@ const Keyboard = window.SimpleKeyboard.default;
 let shiftPressed = false;
 let langPressed = false;
 
+let buttonStates = {};
+
 const layoutTypes = {
     keyboard: "keyboard",
-    navigation: "navigation"
+    navigation: "navigation",
+    nums: "nums"
 }
 
-const layoutsList = [layoutTypes.keyboard, layoutTypes.navigation];
+const layoutsList = [layoutTypes.keyboard, layoutTypes.navigation, layoutTypes.nums];
 
 let layoutType = layoutTypes.keyboard;
 
@@ -43,6 +46,11 @@ const keyboard = new Keyboard({
             "{up}",
             "{left} {space} {right}",
             "{down}"
+        ],
+        nums:[
+            "7 8 9 +",
+            "4 5 6 {enter}",
+            "1 2 3 0",
         ]
     },
     display: {
@@ -62,18 +70,16 @@ function handleKeyboardInput(button) {
     let sendKey = button;
     let sendType = "text";
 
-    // Базовый лог (до изменений)
     console.log(JSON.stringify({ type: sendType, key: sendKey }));
 
     switch (button) {
-        // Системные клавиши (переключение интерфейса)
         case "{shift}":
             handleShiftToggle();
-            return; // Мгновенный выход, отправки в сокет не будет
+            return;
 
         case "{lang}":
             handleLangSwich();
-            return; // Мгновенный выход, отправки в сокет не будет
+            return;
 
         // Клавиши управления текстом
         case "{bksp}":
@@ -117,7 +123,13 @@ function handleKeyboardInput(button) {
             break;
     }
 
-    // Финальный лог и отправка (сработает для всех, кроме shift и lang)
+    let modes = getActiveModifiers()
+
+    if(modes){
+        sendType = "key";
+        sendKey = modes + "+" + sendKey;
+    }
+
     console.log(JSON.stringify({ type: sendType, key: sendKey }));
     ws.send(JSON.stringify({ type: sendType, key: sendKey }));
 }
@@ -153,3 +165,29 @@ function setLayout() {
         layoutName: (layoutType)
     })
 };
+
+document.querySelectorAll(".pad-btn").forEach(btn => {
+    const id = btn.id;
+    buttonStates[id] = false; 
+
+    btn.addEventListener("touchstart", e => {
+        e.preventDefault();  
+        e.stopPropagation(); 
+        buttonStates[id] = true;
+        btn.classList.add("active");
+    }, { passive: false });
+
+    btn.addEventListener("touchend", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        buttonStates[id] = false;
+        btn.classList.remove("active");
+    }, { passive: false });
+});
+
+function getActiveModifiers() {
+    return Object.entries(buttonStates)
+        .filter(([_, value]) => value)
+        .map(([key]) => key)
+        .join("+");
+}

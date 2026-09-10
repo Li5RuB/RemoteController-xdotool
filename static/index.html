@@ -13,7 +13,12 @@
 
 <body>
   <div id="board">
-    <div id="pad"></div>
+    <div id="pad">
+      <div id="Super_L" class="pad-btn">Mod</div>
+      <div id="Shift_L" class="pad-btn">Shift</div>
+      <div id="Alt_L" class="pad-btn">Alt</div>
+      <div id="Control_L" class="pad-btn">Ctrl</div>
+    </div>
     <div id="scrol"></div>
   </div>
   <div id="buttons">
@@ -27,8 +32,8 @@
     const WS_IP = "{{WS_IP}}";
     window.WS_URL = `ws://${WS_IP}:8000/ws`;
   </script>
+  <script src="/static/myWebSocket.js"></script>
   <script src="/static/touchpad.js"></script>
-
   <script src="/static/keyboard.js"></script>
 </body>
 
