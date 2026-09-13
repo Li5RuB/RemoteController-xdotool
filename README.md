@@ -1,12 +1,14 @@
-# i3RemouteControl (myrc)
+# i3RemoteControl (myrc)
 
-Консольная утилита для удаленного управления и автоматизации действий в оконном менеджере **i3wm** с веб-интерфейсом на базе FastAPI/Starlette.
+A console utility for remote control and automation in the **i3wm** window manager, featuring a web-based interface built with FastAPI/Starlette.
 
-## Системные требования
+---
 
-Для корректной эмуляции нажатий клавиш и работы с окнами в системе должна быть установлена утилита `xdotool`.
+## Prerequisites
 
-### Установка xdotool:
+To correctly emulate keypresses, shortcuts, and window actions, your system must have the `xdotool` utility installed.
+
+### Installing xdotool:
 
 * **Ubuntu / Debian / Linux Mint:**
   ```bash
@@ -23,54 +25,63 @@
 
 ---
 
-## Установка проекта
+## Installation
 
-Вы можете установить утилиту двумя способами. Перед установкой склонируйте репозиторий и перейдите в его папку:
+You can install the utility in two ways. Before starting, clone the repository and navigate into the project directory:
 
 ```bash
 git clone https://github.com
-cd i3RemouteControl
+cd i3RemoteControl
 ```
 
-### Вариант 1. Изолированная установка через pipx (Рекомендуется)
-Этот способ установит утилиту в изолированное окружение и сделает команду `myrc` доступной глобально в вашем терминале.
+### Option 1. Isolated Installation via pipx (Recommended)
+This method installs the utility in an isolated environment and makes the `myrc` command available globally across your terminal.
 
 ```bash
-# Установка пакета в режиме разработки (editable)
+# Install the package in editable development mode
 pipx install --editable . --force
 ```
 
-### Вариант 2. Обычная установка через pip
-Если вы предпочитаете использовать стандартный виртуальный менеджер (venv):
+### Option 2. Standard Installation via pip
+If you prefer using a standard virtual environment (`venv`):
 
-1. **Создайте и активируйте виртуальное окружение:**
+1. **Create and activate a virtual environment:**
    ```bash
    python3 -m venv venv
-   source venv/bin/bin/activate  # Для Linux/macOS
+   source venv/bin/activate
    ```
-2. **Установите зависимости из файла requirements.txt:**
+2. **Install the required dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
-3. **Установите сам пакет:**
+3. **Install the package itself:**
    ```bash
    pip install -e .
    ```
 
 ---
 
-## Запуск приложения
+## Running the Application
 
-После успешной установки запустите сервер управления одной командой из любой директории терминала:
+Once installed successfully, you can launch the control server from any directory using a single command:
 
 ```bash
 myrc
 ```
 
-После запуска веб-интерфейс станет доступен в вашем браузере по адресу, указанному в консоли (обычно `http://127.0.0.1:8000`).
+After the server starts, the web interface will be accessible via your mobile or desktop browser at the address displayed in the console (typically `http://localhost:8000` or your local network IP).
 
 ---
 
-## Лицензия
+## Features
 
-Проект распространяется под лицензией [GNU General Public License v3.0](LICENSE).
+- **Virtual Touchpad & Scroll Zone:** Fluid mouse navigation optimized specifically for mobile screens.
+- **iOS Safari Optimization:** Built-in safeguards against native iOS zoom, touch-delays, and text-selection magnifying loupes.
+- **Dual Keyboard Layouts:** Toggle between an on-screen layout viewer (`simple-keyboard`) and a native mobile input modal with an anti-loss character buffer for long texts.
+- **Modifier Keys Toggle:** Fully operational `Mod`, `Shift`, `Alt`, and `Ctrl` button combinations for triggering complex window-manager shortcuts.
+
+---
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
