@@ -69,9 +69,7 @@ const keyboard = new Keyboard({
 
 function handleKeyboardInput(button) {
     let sendKey = button;
-    let sendType = "text";
-
-    console.log(JSON.stringify({ type: sendType, key: sendKey }));
+    let currentEvent = EVENTS.TEXT;
 
     switch (button) {
         case "{shift}":
@@ -85,41 +83,40 @@ function handleKeyboardInput(button) {
         // Клавиши управления текстом
         case "{bksp}":
             sendKey = "BackSpace";
-            sendType = "key";
+            currentEvent = EVENTS.KEY;
             break;
 
         case "{space}":
             sendKey = "space";
-            sendType = "key";
+            currentEvent = EVENTS.KEY;
             break;
 
         case "{enter}":
             sendKey = "Return";
-            sendType = "key";
+            currentEvent = EVENTS.KEY;
             break;
 
         // Стрелочки навигации
         case "{up}":
             sendKey = "Up";
-            sendType = "key";
+            currentEvent = EVENTS.KEY;
             break;
 
         case "{down}":
             sendKey = "Down";
-            sendType = "key";
+            currentEvent = EVENTS.KEY;
             break;
 
         case "{left}":
             sendKey = "Left";
-            sendType = "key";
+            currentEvent = EVENTS.KEY;
             break;
 
         case "{right}":
             sendKey = "Right";
-            sendType = "key";
+            currentEvent = EVENTS.KEY;
             break;
 
-        // Все остальные кнопки (буквы) по умолчанию остаются text
         default:
             break;
     }
@@ -127,12 +124,11 @@ function handleKeyboardInput(button) {
     let modes = getActiveModifiers()
 
     if (modes) {
-        sendType = "key";
+        currentEvent = EVENTS.KEY;
         sendKey = modes + "+" + sendKey;
     }
 
-    console.log(JSON.stringify({ type: sendType, key: sendKey }));
-    ws.send(JSON.stringify({ type: sendType, key: sendKey }));
+    sendBinaryEvent(currentEvent, sendKey, sendType.string)
 }
 
 function handleShiftToggle() {
@@ -174,16 +170,32 @@ document.querySelectorAll(".pad-btn").forEach(btn => {
     btn.addEventListener("touchstart", e => {
         e.preventDefault();
         e.stopPropagation();
+        
         buttonStates[id] = true;
         btn.classList.add("active");
     }, { passive: false });
 
+    btn.addEventListener("touchmove", e => {
+        e.preventDefault();
+        e.stopPropagation(); 
+    }, { passive: false });
+
     btn.addEventListener("touchend", e => {
         e.preventDefault();
-        e.stopPropagation();
+        e.stopPropagation(); 
+        
         buttonStates[id] = false;
         btn.classList.remove("active");
     }, { passive: false });
+    
+    btn.addEventListener("touchcancel", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        buttonStates[id] = false;
+        btn.classList.remove("active");
+    }, { passive: false });
+
 });
 
 function getActiveModifiers() {

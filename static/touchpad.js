@@ -17,9 +17,7 @@ scrol.addEventListener("touchmove", e => {
   const t = e.touches[0];
   if (lastScrolly != null) {
     let dy = (t.clientY - lastScrolly) / SCROLL_SENSITIVITY;
-
     throtteledScrollSend(dy)
-    console.log("scroll:", dy);
   }
   lastScrolly = t.clientY;
 }, { passive: false });
@@ -49,7 +47,7 @@ pad.addEventListener('touchstart', e => {
 
   if (fingers === 2) {
     // удержание
-    ws.send(JSON.stringify({ type: "hold_start" }));
+    sendBinaryEvent(EVENTS.HOLD_START);
   }
 }, { passive: false });
 
@@ -57,12 +55,12 @@ pad.addEventListener('touchend', e => {
   const fingers = e.touches.length;
 
   if (fingers === 0) {
-    ws.send(JSON.stringify({ type: "hold_end" }));
+    sendBinaryEvent(EVENTS.HOLD_END);
   }
 
   const tapDuration = Date.now() - touchStartTime;
   if (!moved && tapDuration < 100){
-    sendClick('1')
+    sendClick(1);
   }
 
 
@@ -73,7 +71,7 @@ pad.addEventListener('touchend', e => {
 function throtteledMoveSend(dx, dy) {
   const now = Date.now();
   if (now - lastSend > 5) {
-    ws.send(JSON.stringify({ type: "move", dx, dy }));
+    sendBinaryEvent(EVENTS.MOVE, [dx, dy], sendType.coords);
     lastSend = now;
   }
 }
@@ -81,17 +79,15 @@ function throtteledMoveSend(dx, dy) {
 function throtteledScrollSend(dy) {
   const now = Date.now();
   if (now - lastSend > 5) {
-    ws.send(JSON.stringify({ type: 'scroll', dy }));
+    sendBinaryEvent(EVENTS.SCROLL, dy, sendType.float32);
     lastSend = now;
   }
 }
 
 function sendClick(key) {
-  console.log("Send click");
-  ws.send(JSON.stringify({ type: "click", key: key }));
+  sendBinaryEvent(EVENTS.CLICK, key, sendType.int16);
 }
 
 function sendKey(key) {
-  console.log("Send key");
-  ws.send(JSON.stringify({ type: "key", key: key }));
+  sendBinaryEvent(EVENTS.KEY, String(key), sendType.string);
 }

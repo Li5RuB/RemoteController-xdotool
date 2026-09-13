@@ -4,9 +4,7 @@ function toggleModal(show) {
 
     if (show) {
         modal.classList.remove("hidden");
-        setTimeout(() => {
-            input.focus();
-        }, 100);
+        input.focus();
     } else {
         modal.classList.add("hidden");
         input.value = "";
@@ -19,11 +17,10 @@ function sendModalText() {
     const text = input.value;
 
     if (text.length > 0) {
-        console.log(JSON.stringify({ type: "text", key: text }));
-        ws.send(JSON.stringify({ type: "text", key: text }));
+        sendBinaryEvent(EVENTS.TEXT, String(text), sendType.string);
     }
 
-    //toggleModal(false);
+    toggleModal(false);
 }
 
 document.getElementById("modal-input").addEventListener("keydown", function (e) {

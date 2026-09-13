@@ -93,15 +93,40 @@ body {
 
 #buttons {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  flex: 0 0 auto;
+  justify-content: space-around; /* Равномерно распределяет кнопки по ширине */
+  align-items: center;
+  background-color: #2b2b2b;     /* Приятный темно-серый фон панели */
+  padding: 8px 4px;              /* Минимальные отступы сверху/снизу */
+  box-sizing: border-box;
+  gap: 6px;                      /* Фиксированный зазор между кнопками */
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
+#buttons button {
+  flex: 1;                       /* Все кнопки будут строго одинаковой ширины */
+  max-width: 60px;               /* Ограничиваем максимальную ширину, чтобы не растягивались на планшетах */
+  height: 44px;                  /* Идеальная высота для тапа по гайдлайнам Apple/Google (минимум 44px) */
+  background-color: #3e3e3e;     /* Цвет самой кнопки */
+  border: none;
+  border-radius: 8px;            /* Аккуратные скругления углов */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent; /* Убирает синее выделение при тапе на iPhone */
+}
+
+/* Эффект при нажатии (для отзывчивости пульта) */
+#buttons button:active {
+  background-color: #555555;
+  transform: scale(0.95);        /* Кнопка слегка вдавливается при тапе */
+}
+
+/* Стили для SVG-иконок внутри кнопок */
+#buttons button svg {
+  width: 24px;                   /* Компактный и аккуратный размер иконки */
+  height: 24px;
+  fill: #e0e0e0;                 /* Светло-серый цвет иконок */
 }
 
 .simple-keyboard .hg-button {

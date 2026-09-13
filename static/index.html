@@ -22,11 +22,38 @@
     <div id="scrol"></div>
   </div>
   <div id="buttons">
-    <button onclick="sendClick('1')">L</button>
-    <button onclick="sendClick('3')">R</button>
-    <button onclick="swapLayoutType()">Swich</button>
-    <button onclick="toggleModal(true)">Text</button>
-    <button onclick="toggleSimpleKeyboard()">keyboard</button>
+    <div id="buttons">
+    <!-- Левый клик -->
+    <button onclick="sendClick(1)" title="Левый клик">
+      <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12v2a10 10 0 0 0 10 10 10 10 0 0 0 10-10v-2A10 10 0 0 0 12 2m-1 19.93A8.003 8.003 0 0 1 4 14v-1h7v7.93M11 11H4v-1a8.003 8.003 0 0 1 7-7.93V11m9 3a8.003 8.003 0 0 1-7 7.93V13h7v1m0-3h-7V3.07a8.003 8.003 0 0 1 7 7.93V11Z"/></svg>
+    </button>
+    
+    <!-- Правый клик -->
+    <button onclick="sendClick(3)" title="Правый клик">
+      <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12v2a10 10 0 0 0 10 10 10 10 0 0 0 10-10v-2A10 10 0 0 0 12 2m-1 19.93A8.003 8.003 0 0 1 4 14v-1h7v7.93M11 11H4v-1a8.003 8.003 0 0 1 7-7.93V11m9 3a8.003 8.003 0 0 1-7 7.93V13h7v1m0-3h-7V3.07a8.003 8.003 0 0 1 7 7.93V11Z" opacity=".5"/></svg>
+    </button>
+    
+    <!-- Смена раскладки (Switch) -->
+    <button onclick="swapLayoutType()" title="Сменить раскладку">
+      <svg viewBox="0 0 24 24"><path d="M19 8l-4 4h3c0 3.31-2.69 6-6 6a5.87 5.87 0 0 1-2.8-.7l-1.46 1.46A7.93 7.93 0 0 0 12 20c4.42 0 8-3.58 8-8h3l-4-4M6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46A7.93 7.93 0 0 0 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6Z"/></svg>
+    </button>
+    
+    <!-- Ввод текста (Text) -->
+    <button onclick="toggleModal(true)" title="Ввести текст">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2ZM6 9h12v2H6V9Zm8 5H6v-2h8v2Zm4-6H6V6h12v2Z"/></svg>
+    </button>
+    
+    <!-- Открыть клавиатуру -->
+    <button onclick="toggleSimpleKeyboard()" title="Клавиатура">
+      <svg viewBox="0 0 24 24"><path d="M20 7H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2Zm-9 2h2v2h-2V9Zm0 3h2v2h-2v-2ZM8 9h2v2H8V9Zm0 3h2v2H8v-2Zm-3 0h2v2H5v-2Zm0-3h2v2H5V9Zm11 6H8v-2h8v2Zm0-3h2v2h-2v-2Zm0-3h2v2h-2V9Zm3 3h2v2h-2v-2Zm0-3h2v2h-2V9Z"/></svg>
+    </button>
+    
+    <!-- Отправить файл (File) -->
+    <button onclick="document.getElementById('file-input').click()" title="Отправить файл">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6Zm2 16H8v-2h8v2Zm0-4H8v-2h8v2Zm-3-5V3.5L18.5 9H13Z"/></svg>
+    </button>
+    <input type="file" id="file-input" style="display: none;" onchange="sendFile(this)">
+  </div>
   </div>
   <div id = "keyboard-container" class="simple-keyboard hidden" style="min-height: 30%; background: #393939;"></div>
 
@@ -49,6 +76,7 @@
   <script src="/static/keyboard.js"></script>
   <script src="/static/eventBlock.js"></script>
   <script src="/static/sendText.js"></script>
+  <script src="/static/filesend.js"></script>
 </body>
 
 </html>
