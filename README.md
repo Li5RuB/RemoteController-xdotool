@@ -31,7 +31,7 @@ You can install the utility in two ways. Before starting, clone the repository a
 
 ```bash
 git clone https://github.com
-cd i3RemoteControl
+cd RemoteController-xdotool
 ```
 
 ### Option 1. Isolated Installation via pipx (Recommended)
