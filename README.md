@@ -1,4 +1,4 @@
-# i3RemoteControl (myrc)
+# RemoteController-xdotool (myrc)
 
 A console utility for remote control and automation in the **i3wm** window manager, featuring a web-based interface built with FastAPI/Starlette.
 
