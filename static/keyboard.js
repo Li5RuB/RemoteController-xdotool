@@ -16,6 +16,7 @@ let layoutType = layoutTypes.keyboard;
 
 const keyboard = new Keyboard({
     onChange: input => { },
+    preventMouseDownDefault: true,
     onKeyPress: button => {
         handleKeyboardInput(button);
     },
@@ -47,7 +48,7 @@ const keyboard = new Keyboard({
             "{left} {space} {right}",
             "{down}"
         ],
-        nums:[
+        nums: [
             "7 8 9 +",
             "4 5 6 {enter}",
             "1 2 3 0",
@@ -125,7 +126,7 @@ function handleKeyboardInput(button) {
 
     let modes = getActiveModifiers()
 
-    if(modes){
+    if (modes) {
         sendType = "key";
         sendKey = modes + "+" + sendKey;
     }
@@ -144,7 +145,7 @@ function handleLangSwich() {
     setLayout();
 }
 
-function swapLayoutType(){
+function swapLayoutType() {
     let currentLayoutIndex = layoutsList.indexOf(layoutType)
 
     currentLayoutIndex = (currentLayoutIndex + 1) % layoutsList.length;
@@ -168,11 +169,11 @@ function setLayout() {
 
 document.querySelectorAll(".pad-btn").forEach(btn => {
     const id = btn.id;
-    buttonStates[id] = false; 
+    buttonStates[id] = false;
 
     btn.addEventListener("touchstart", e => {
-        e.preventDefault();  
-        e.stopPropagation(); 
+        e.preventDefault();
+        e.stopPropagation();
         buttonStates[id] = true;
         btn.classList.add("active");
     }, { passive: false });
@@ -190,4 +191,9 @@ function getActiveModifiers() {
         .filter(([_, value]) => value)
         .map(([key]) => key)
         .join("+");
+}
+
+function toggleSimpleKeyboard() {
+    const kbContainer = document.getElementById("keyboard-container");
+    kbContainer.classList.toggle("hidden");
 }

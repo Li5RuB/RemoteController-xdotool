@@ -7,7 +7,6 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pynput.mouse import Controller as MouseController
-from pynput.keyboard import Controller as KeyboardController
 import uvicorn
 
 HANDLERS = {
@@ -21,11 +20,9 @@ HANDLERS = {
 }
 
 mouse = MouseController()
-keyboard = KeyboardController()
-
 
 def send_unicode(char):
-    subprocess.run(["xdotool", "type", "--clearmodifiers", char])
+    subprocess.run(["xdotool", "type", "--clearmodifiers","--delay", "40", char])
 
 
 def get_local_ip():
@@ -102,7 +99,7 @@ async def websocket_endpoint(ws: WebSocket):
             handler = HANDLERS.get(msg_type)
 
             if handler:
-                handler(msg)  # Просто вызываем нужную функцию
+                handler(msg)
             else:
                 print(f"Unknown message type: {msg_type}")
     except WebSocketDisconnect:
