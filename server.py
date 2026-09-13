@@ -37,6 +37,24 @@ HANDLERS = {
 mouse = MouseController()
 
 
+def get_unique_filename(filepath):
+    """
+    Если файл существует, добавляет к его имени суффикс (1), (2) и т.д.
+    """
+    # Если файла нет, возвращаем путь без изменений
+    if not os.path.exists(filepath):
+        return filepath
+    
+    # Разделяем путь на (путь + имя) и расширение
+    base, extension = os.path.splitext(filepath)
+    
+    counter = 1
+    # Цикл работает, пока файл с таким именем существует
+    while os.path.exists(f"{base} ({counter}){extension}"):
+        counter += 1
+        
+    return f"{base} ({counter}){extension}"
+
 def save_received_file(payload):
     if len(payload) < 2:
         return
@@ -58,6 +76,16 @@ def save_received_file(payload):
         
         full_path = downloads_dir / file_name
         
+        if full_path.exists():
+            stem = full_path.stem      # Имя файла без расширения (напр. 'document')
+            suffix = full_path.suffix  # Расширение файла (напр. '.txt')
+            counter = 1
+
+            while (downloads_dir / f"{stem} ({counter}){suffix}").exists():
+                counter += 1
+
+            full_path = downloads_dir / f"{stem} ({counter}){suffix}"
+
         with open(full_path, "wb") as f:
             f.write(file_content)
             
