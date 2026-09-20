@@ -1,25 +1,51 @@
-const ws = new WebSocket(window.WS_URL);
-ws.binaryType = 'arraybuffer';
+let ws; 
+let isReconnecting = false; // Флаг, защищающий от одновременных попыток переподключения
 
-const buffer = new ArrayBuffer(6);
-const view = new DataView(buffer);
+function connectWebSocket() {
+  if (ws) {
+    // На всякий случай очищаем старые обработчики перед пересозданием
+    ws.onopen = null;
+    ws.onmessage = null;
+    ws.onerror = null;
+    ws.onclose = null;
+  }
 
-ws.onopen = () => {
-  console.log("ws connected");
-};
+  ws = new WebSocket(window.WS_URL);
+  ws.binaryType = 'arraybuffer';
 
-ws.onmessage = (event) => {
-  console.log("Message from server:", event.data);
-};
+  ws.onopen = () => {
+    console.log("ws connected");
+    isReconnecting = false; // Успешно подключились, сбрасываем флаг
+  };
 
-ws.onerror = (err) => {
-  console.log("error:", err);
-};
+  ws.onmessage = (event) => {
+    console.log("Message from server:", event.data);
+  };
 
-ws.onclose = () => {
-  console.log("ws close");
-};
+  ws.onerror = (err) => {
+    console.log("error:", err);
+  };
 
+  ws.onclose = () => {
+    console.log("ws close");
+    reconnect(); // Вызываем безопасное переподключение
+  };
+}
+
+
+function reconnect() {
+  if (isReconnecting) return; // Если мы уже в процессе ожидания, ничего не делаем
+  isReconnecting = true;
+
+  console.log("Попытка переподключения через 2 секунды...");
+  
+  // Делаем задержку в 2 секунды, чтобы не ломать сервер бесконечным спамом в цикле
+  setTimeout(() => {
+    connectWebSocket();
+  }, 2000); 
+}
+
+connectWebSocket();
 
 const textEncoder = new TextEncoder();
 
@@ -42,7 +68,9 @@ const sendType = {
 }
 
 function sendBinaryEvent(eventId, payload = null, type = null) {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
+
+  };
   
   if (ws.binaryType !== 'arraybuffer') {
     ws.binaryType = 'arraybuffer';

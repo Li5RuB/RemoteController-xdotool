@@ -1,6 +1,4 @@
 const Keyboard = window.SimpleKeyboard.default;
-let shiftPressed = false;
-let langPressed = false;
 
 let buttonStates = {};
 
@@ -11,8 +9,6 @@ const layoutTypes = {
 }
 
 const layoutsList = [layoutTypes.keyboard, layoutTypes.navigation, layoutTypes.nums];
-
-let layoutType = layoutTypes.keyboard;
 
 const keyboard = new Keyboard({
     onChange: input => { },
@@ -132,25 +128,30 @@ function handleKeyboardInput(button) {
 }
 
 function handleShiftToggle() {
-    shiftPressed = !shiftPressed;
+    SetSettings("shiftPressed", !GetSettings("shiftPressed"))
     setLayout();
 }
 
 function handleLangSwich() {
-    langPressed = !langPressed;
+    SetSettings("langPressed", !GetSettings("langPressed"))
     setLayout();
 }
 
 function swapLayoutType() {
+    let layoutType = GetSettings("layoutType");
     let currentLayoutIndex = layoutsList.indexOf(layoutType)
 
     currentLayoutIndex = (currentLayoutIndex + 1) % layoutsList.length;
 
-    layoutType = layoutsList[currentLayoutIndex];
+    SetSettings("layoutType", layoutsList[currentLayoutIndex])
     setLayout();
 }
 
 function setLayout() {
+    let layoutType = GetSettings("layoutType");
+    let langPressed = GetSettings("langPressed");
+    let shiftPressed = GetSettings("shiftPressed");
+
     if (layoutType == layoutTypes.keyboard) {
         keyboard.setOptions({
             layoutName: (langPressed ? "russian" : "default") + (shiftPressed ? "_shift" : "")
@@ -207,5 +208,21 @@ function getActiveModifiers() {
 
 function toggleSimpleKeyboard() {
     const kbContainer = document.getElementById("keyboard-container");
-    kbContainer.classList.toggle("hidden");
+    
+    let hiddenkeyboard = !GetSettings("hiddenkeyboard")
+    SetSettings("hiddenkeyboard", hiddenkeyboard)  
+    kbContainer.classList.toggle("hidden", hiddenkeyboard);
+}
+
+function Init(){
+    setLayout();
+    const kbContainer = document.getElementById("keyboard-container");
+    console.log(GetSettings("hiddenkeyboard"))
+    kbContainer.classList.toggle("hidden", GetSettings("hiddenkeyboard"));
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", Init);
+} else {
+    Init();
 }
